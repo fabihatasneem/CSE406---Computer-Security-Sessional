@@ -1,6 +1,8 @@
 from BitVector import *
 from bitvectordemo import *
 
+k = 16                  #128 bits = 16 bytes
+
 def left_shift(my_list):
     return [my_list[1], my_list[2], my_list[3], my_list[0]]
 
@@ -171,3 +173,23 @@ def convert_matrix_to_words(matrix):
                 word_list.append(matrix[j][i])
     return word_list
 
+#if key is less than 128 bits or 16 bytes, expand it to 16 bytes using padding
+def key_expand(key):
+    if(len(key) < 32):
+        key = key.zfill(32)
+    # else if key is greater than 128 bits or 16 bytes, truncate it to 16 bytes
+    elif(len(key) > 32):
+        key = key[:32]
+    return key
+
+# print a list of multiple 4x4 matrices
+def print_matrix(matrix_list):
+    for i in range(len(matrix_list)):
+        print("Round Key Matrix ", i, ":")
+        # print the matrix in a nice 4x4 format
+        for j in range(4):
+            print("| ", end=' ')
+            for k in range(4):
+                print(matrix_list[i][j][k], end=' ')
+            print("|")
+        print()

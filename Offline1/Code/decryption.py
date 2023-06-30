@@ -1,6 +1,14 @@
 from util import *
 from encryption import *
 
+k = 128
+if(k == 128):
+    num_of_rounds = 10
+elif(k == 192):
+    num_of_rounds = 12
+elif(k == 256):
+    num_of_rounds = 14
+
 def decryption(ciphertext, round_key_matrices):
     #if ciphertext is longer than 128 bits, break it into chunks of 128 bits
     ciphertext = chunk_hex_string(ciphertext)
@@ -9,8 +17,8 @@ def decryption(ciphertext, round_key_matrices):
         ciphertext[i] = break_hex_string(ciphertext[i])
         #add round key from the last round with the ciphertext matrix
         state_matrix = list_to_matrix(ciphertext[i])
-        state_matrix = XOR_matrix(state_matrix, round_key_matrices[10])
-        for i in reversed(range(10)):
+        state_matrix = XOR_matrix(state_matrix, round_key_matrices[num_of_rounds])
+        for i in reversed(range(num_of_rounds)):
             #inverse shift rows
             state_matrix = inverse_shift_rows(state_matrix)
             #inverse byte substitution

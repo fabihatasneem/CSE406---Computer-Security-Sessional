@@ -1,5 +1,13 @@
 from util import *
 
+k = 128
+if(k == 128):
+    num_of_rounds = 10
+elif(k == 192):
+    num_of_rounds = 12
+elif(k == 256):
+    num_of_rounds = 14
+
 def encryption(plain_text_chunks, round_key_matrices):
     ciphertext_hex = ""
     ciphertext_ascii = ""
@@ -11,12 +19,12 @@ def encryption(plain_text_chunks, round_key_matrices):
         state_matrix = turn_into_column_matrix(state_matrix)
         state_matrix = XOR_matrix(state_matrix, round_key_matrices[0])
 
-        for j in range(10):
+        for j in range(num_of_rounds):
             #substitute bytes of each entry of the state matrix
             state_matrix = byte_substitution_matrix(state_matrix, False)
             #shift rows of the state matrix
             state_matrix = shift_rows(state_matrix)
-            #mix columns of the state matrix if round is not 10
+            #mix columns of the state matrix if round is not last round
             if j != 9:
                 state_matrix = mix_columns(state_matrix, False)
             #XOR with this round's key from the round_key_list
@@ -42,7 +50,7 @@ def round_key_generate(hex_key):
     round_key_matrices.append(round0_key)
 
     # XOR with the previous round key and store the result
-    for i in range(10):
+    for i in range(num_of_rounds):
         curr = []
         g_w_3 = modify_last_word(i+1, round_key[3])
         curr.append(XOR_word(g_w_3, round_key[0]))
