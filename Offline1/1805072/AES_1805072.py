@@ -1,6 +1,6 @@
-from encryption import *
-from decryption import *
-from alice import *
+from encryption_1805072 import *
+from decryption_1805072 import *
+from alice_1805072 import *
 import time
 
 #take input string

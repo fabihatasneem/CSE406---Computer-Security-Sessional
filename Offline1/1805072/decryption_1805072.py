@@ -1,5 +1,5 @@
-from util import *
-from encryption import *
+from util_1805072 import *
+from encryption_1805072 import *
 
 k = 128
 if(k == 128):

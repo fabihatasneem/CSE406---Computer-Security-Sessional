@@ -1,5 +1,5 @@
 from BitVector import *
-from bitvectordemo import *
+from bitvectordemo_1805072 import *
 
 k = 16                  #128 bits = 16 bytes
 

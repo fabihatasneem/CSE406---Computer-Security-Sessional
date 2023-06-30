@@ -1,7 +1,7 @@
 import socket
 import time
-from decryption import *
-from diffie_hellman import *
+from decryption_1805072 import *
+from diffie_hellman_1805072 import *
 
 host = socket.gethostname()
 port = 1234
@@ -68,7 +68,7 @@ while True:
         hex_key = get_hex_from_ascii(str(C2))
         hex_key = key_expand(hex_key)
         round_key_matrices = round_key_generate(hex_key)
-        print_matrix(round_key_matrices)
+        # print_matrix(round_key_matrices)
 
         #DECRYPTION
         start_time = time.perf_counter()

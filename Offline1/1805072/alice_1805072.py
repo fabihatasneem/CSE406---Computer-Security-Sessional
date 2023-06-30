@@ -1,7 +1,7 @@
 import socket
 import time
-from diffie_hellman import *
-from encryption import *
+from diffie_hellman_1805072 import *
+from encryption_1805072 import *
 
 host = socket.gethostname()
 port = 1234
@@ -63,7 +63,7 @@ while True:
         #ENCRYPTION
         start_time = time.perf_counter()
         round_key_matrices = round_key_generate(hex_key)
-        print_matrix(round_key_matrices)
+        # print_matrix(round_key_matrices)
         ciphertext = encryption(plain_text_chunks, round_key_matrices)
         encryption_time = time.perf_counter() - start_time
         print("Encryption time: ", encryption_time, " seconds")
