@@ -14,6 +14,7 @@ A = 0
 B = 0
 C2 = 0
 message = ""
+filename = "message_received.txt"
 
 s = socket.socket()
 s.bind((host, port))
@@ -24,15 +25,14 @@ conn, addr = s.accept()
 print(f'Connected to Alice by {addr}')
 
 while True:
-    # Receive file from Alice first
+    # Receive from Alice first
     message = conn.recv(chunk_size).decode()
-    print('Data received from Alice')
 
     # Split the message into a list of substrings
     lines = message.split(' ')
 
     if(lines[0] == "KEY"):
-        print('KEY File received from Alice')
+        print('KEY received from Alice')
         message = lines[0]
         p = int(lines[1])
         g = int(lines[2])
@@ -46,13 +46,12 @@ while True:
         conn.send(data)
         print('KEY File sent to Alice')
     elif(lines[0] == "READY"):
-        print('READY File received from Alice')
-        print("Private Key Shared :", C2)
+        print('READY received from Alice')
 
         # Inform Alice that Bob is ready
         data = ("READY").encode()
         conn.send(data)
-        print('READY File sent to Alice')
+        print('READY sent to Alice')
     elif(lines[0] == "NOTREADY"):
         b = generate_prime_number(int(k/2))
         B = binary_exponentiation(g, b, p)
@@ -61,19 +60,19 @@ while True:
         # Send key to Alice
         data = ("KEY " + str(B) + " " + str(C2)).encode()
         conn.send(data)
-        print('KEY File again sent to Alice')
+        print('KEY again sent to Alice')
     elif(lines[0] == "CIPHERTEXT"):
-        print('CIPHERTEXT File received from Alice')
+        print('CIPHERTEXT received from Alice')
         ciphertext = lines[1]
         hex_key = get_hex_from_ascii(str(C2))
         hex_key = key_expand(hex_key)
         round_key_matrices = round_key_generate(hex_key)
-        # print_matrix(round_key_matrices)
 
         #DECRYPTION
         start_time = time.perf_counter()
         decrypted_output = decryption(ciphertext, round_key_matrices)
         decryption_time = time.perf_counter() - start_time
-        print("Deciphered Text in ASCII:", decrypted_output)
+        with open(filename, 'w') as f:
+            f.write(decrypted_output)
         print("Decryption time: ", decryption_time, " seconds")
         break
