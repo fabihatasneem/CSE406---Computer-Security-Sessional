@@ -9,6 +9,7 @@ chunk_size = 1024
 k = 128
 message = ""
 C1 = 0
+filename = "message_sent.txt"
 
 s = socket.socket()
 s.connect((host, port))
@@ -27,7 +28,7 @@ data = ("KEY " + str(p) + " " + str(g) + " " + str(A)).encode()
 s.send(data)
 
 while True:
-    # Receive file from Bob
+    # Receive from Bob
     message = s.recv(chunk_size).decode()
     print('Data received from Bob')
 
@@ -35,7 +36,7 @@ while True:
     lines = message.split(' ')
 
     if(lines[0] == "KEY"):
-        print('KEY File received from Bob')
+        print('KEY received from Bob')
         # Compute C = B^a (mod p) = A^b (mod p)
         B = int(lines[1])
         C2 = int(lines[2])
@@ -45,15 +46,15 @@ while True:
             #Inform Bob that Alice is ready
             data = ("READY").encode()
             s.send(data)
-            print('READY File sent to Bob')
+            print('READY sent to Bob')
         else:
             print("Private Key not Shared")
             data = ("NOTREADY").encode()
             s.send(data)
     elif(lines[0] == "READY"):
-        print('READY File received from Bob')
-        #take input string
-        input_string = input("Enter a plain text: ")
+        print('READY received from Bob')
+        with open(filename, 'r') as f:
+            input_string = f.read()
 
         # chunk the string into 16 byte chunks
         plain_text_chunks = chunk_string(input_string)
@@ -72,5 +73,5 @@ while True:
         # Send ciphertext
         data = ("CIPHERTEXT " + ciphertext).encode()
         s.send(data)
-        print('CIPHERTEXT File sent to Bob')
+        print('CIPHERTEXT sent to Bob')
         break

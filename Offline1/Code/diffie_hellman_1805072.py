@@ -58,17 +58,20 @@ k = 256
 p_start_time = time.perf_counter()
 p = generate_prime_number(k)
 p_time = time.perf_counter() - p_start_time
+print("p:", p)
 print("Time taken to generate prime number p :", p_time)
 
 g_start_time = time.perf_counter()
 g = generate_primitive_root(p, 2, p-2)
 g_time = time.perf_counter() - g_start_time
+print("g:", g)
 print("Time taken to generate primitive root g :", g_time)
 
 # generate random prime number a of given bit length k/2
 a_start_time = time.perf_counter()
 a = generate_prime_number(int(k/2))
 a_time = time.perf_counter() - a_start_time
+print("a:", a)
 print("Time taken to generate random prime number a :", a_time)
 
 b = generate_prime_number(int(k/2))
@@ -77,9 +80,11 @@ b = generate_prime_number(int(k/2))
 A_start_time = time.perf_counter()
 A = binary_exponentiation(g, a, p)
 A_time = time.perf_counter() - A_start_time
+print("A:", A)
 print("Time taken to compute A :", A_time)
 
 B = binary_exponentiation(g, b, p)
+print("B:", B)
 
 c1_start_time = time.perf_counter()
 C1 = binary_exponentiation(B, a, p)
