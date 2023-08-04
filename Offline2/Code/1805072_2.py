@@ -121,7 +121,7 @@ def mutate(filename):
             lines.insert(rand_num, random_string)
 
         # create a new file and write the new code into it so that we don't overwrite the original file
-        with open("AbraWorm_2.py", 'w') as new_file:
+        with open("AbraWorm.py", 'w') as new_file:
             for line in lines:
                 new_file.write(line + "\n")
             new_file.close()
