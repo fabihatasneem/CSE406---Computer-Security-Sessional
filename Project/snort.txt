@@ -1,0 +1,91 @@
+rule creation website - http://snorpy.cyb3rs3c.net/
+
+20.04
+-----------
+$sudo apt-get update
+$sudo apt-get install snort -y
+
+-------------
+$ifconfig 
+ enp0s3
+$ip a s 
+ 192.168.0.0/24
+-------------
+is installed ? $ snort --version
+$ man snort
+
+to open snort directory - $ ls -al /etc/snort
+=> most important file is "snort.conf", make a copy of that file
+$sudo cp /etc/snort/snort.conf Documents/backup.txt
+
+=> open snort.conf file
+$sudo vim /etc/snort/snort.conf or $sudo gedit /etc/snort/snort.conf
+=> if "vim" command not found
+sudo apt-get update
+sudo apt-get install vim
+____________________
+"vim " commands	   |
+____________________
+press i(insert) or esc(normal)
+i->change->esc->press w
+to exit-> :qa!
+1) Save Your Changes (If Needed): If you've made changes to the file you're editing and want to save those changes, press Esc to ensure you're in Normal mode 
+(not Insert mode), then type :w and press Enter. This command writes (saves) the changes to the file.
+
+2) Quit Vim: To exit Vim without saving changes, press Esc to ensure you're in Normal mode, then type :q and press Enter. This command quits Vim.
+
+3) Save and Quit: If you've made changes and want to save them before quitting, you can combine the previous two commands into :wq and press Enter. This 
+command saves the changes and quits Vim.
+
+4) Force Quit (Discard Changes): If you want to quit Vim without saving changes and don't want Vim to prompt you, you can use :q! and press Enter. This forces
+ Vim to quit without saving.
+
+Remember that Vim can have different modes (Insert mode, Normal mode, etc.), so it's essential to be in Normal mode before executing these commands. 
+If you're unsure about the mode you're in, press Esc to ensure you're in Normal mode.
+
+These commands should allow you to close Vim in various ways depending on whether you want to save changes or not.
+_____________________________________________________________________________________________________________________________________________
+
+HOME_NET -> the subnet we want to monitor, in our case (192.168.0.0/24)
+EXTERNAL_NET -> any
+
+Rule Pathe
+__________
+var RULE_PATH /etc/snort/rules
+var SO_RULE_PATH /etc/snort/so_rules
+var PREPROC_RULE_PATH /etc/snort/preproc_rules
+
+local.rules is initially empty
+
+=> test the configuration file
+$ sudo snort -T -i enp0s3 -c /etc/snort/snort.conf
+
+$ sudo vim /etc/snort/rules/local.rules
+write some rules
+----------------------------
+alert icmp any any -> $HOME_NET any (msg:"ICMP Ping Detected"; sid:100001; rev:1;)
+alert tcp any any -> $HOME_NET 22 (msg:"SSH Authentication Attempt"; sid:100002; rev:1;)
+alert tcp any any -> 192.168.0.106 21 (msg:"FTP Authentication Attempt On SEED"; sid:100003; rev:1;)
+
+-------------------------
+$ sudo snort -q -l /var/log/snort -i enp0s3 -A console -c /etc/snort/snort.conf
+$ sudo snort -q -l /var/log/snort -i enp0s3 -A fast -c /etc/snort/snort.conf
+
+ssh seed@192.168.0.106
+
+________________________
+open "other" folder
+alerts in var/log/snort directory
+
+
+
+
+
+=> get latest release of wireshark
+sudo add-apt-repository ppa:wireshark-dev/stable
+
+=> metasploitable username and password
+msfadmin msfadmin
+
+=> from kali, ssh -oHostKeyAlgorithms=+ssh-dss msfadmin@192.168.0.102
+ssh sumaiya@192.168.0.101
